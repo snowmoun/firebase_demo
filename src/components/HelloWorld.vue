@@ -1,6 +1,18 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+    <form>
+      member:
+      <input type="text" v-model="inputName">
+      <br>age:
+      <input type="number" v-model="inputAge">
+      <br>
+      <input type="button" value="Submit" @click="addMember(inputName, inputAge)">
+    </form>
+
+    <div v-for="member in members" :key="member.id">
+      <p>ID: {{member.id}} & member:{{member.name}} & age：{{member.age}}</p>
+    </div>
+
     <v-table
       is-horizontal-resize
       style="width:100%"
@@ -14,6 +26,7 @@
 
 <script>
 import Vue from "vue";
+import { db } from "../main";
 
 // 引入样式
 import "vue-easytable/libs/themes-base/index.css";
@@ -32,73 +45,36 @@ export default {
   },
   data() {
     return {
-      tableData: [
-        {
-          name: "赵伟",
-          tel: "156*****1987",
-          hobby: "钢琴、书法、唱歌",
-          address: "上海市黄浦区金陵东路569号17楼"
-        },
-        {
-          name: "李伟",
-          tel: "182*****1538",
-          hobby: "钢琴、书法、唱歌",
-          address: "上海市奉贤区南桥镇立新路12号2楼"
-        },
-        {
-          name: "孙伟",
-          tel: "161*****0097",
-          hobby: "钢琴、书法、唱歌",
-          address: "上海市崇明县城桥镇八一路739号"
-        },
-        {
-          name: "周伟",
-          tel: "197*****1123",
-          hobby: "钢琴、书法、唱歌",
-          address: "上海市青浦区青浦镇章浜路24号"
-        },
-        {
-          name: "吴伟",
-          tel: "183*****6678",
-          hobby: "钢琴、书法、唱歌",
-          address: "上海市松江区乐都西路867-871号"
-        }
-      ],
-      columns: [
-        {
-          field: "name",
-          title: "姓名",
-          width: 80,
-          titleAlign: "center",
-          columnAlign: "center",
-          isResize: true
-        },
-        {
-          field: "tel",
-          title: "手机号码",
-          width: 150,
-          titleAlign: "center",
-          columnAlign: "center",
-          isResize: true
-        },
-        {
-          field: "hobby",
-          title: "爱好",
-          width: 150,
-          titleAlign: "center",
-          columnAlign: "center",
-          isResize: true
-        },
-        {
-          field: "address",
-          title: "地址",
-          width: 280,
-          titleAlign: "center",
-          columnAlign: "left",
-          isResize: true
-        }
-      ]
+      members: [],
+      inputName: "John",
+      inputAge: 18
     };
+  },
+  firestore() {
+    return {
+      members: db.collection("members").orderBy("name")
+    };
+  },
+  methods:{
+    addMember(name1, age1) {
+      name1 = age1; // for building
+      // 注意：在 add 資料時，可以用另一種方式來設值(如下)，但欄位名要相同才行
+      let name = this.inputName;
+      let age = this.inputAge;
+
+      db.collection("members").add({
+        name,
+        age
+      });
+
+      // db.collection("members").add({
+      //     name: name1,
+      //     age: age1
+      // });
+
+      this.inputName = null;
+      this.inputAge = null;
+    }
   }
 };
 </script>
