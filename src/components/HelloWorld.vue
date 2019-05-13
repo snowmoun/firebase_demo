@@ -1,5 +1,13 @@
 <template>
   <div class="hello">
+
+    <va-carousel
+              :name="carousel.name"
+              :list="carousel.list"
+            >
+            </va-carousel>
+
+
     <InsertMember @onAddMember="addMember"></InsertMember>
 
     <div v-for="member in members" :key="member.id">
@@ -25,6 +33,7 @@ import { db } from "../main";
 
 // 引入样式
 import "vue-easytable/libs/themes-base/index.css";
+import VACarousel from 'vue2-admin-lte/src/components/VACarousel.vue'
 
 // 导入 table 和 分页组件
 import { VTable, VPagination } from "vue-easytable";
@@ -35,7 +44,11 @@ Vue.component('table-operation', TableOperation);
 import InsertMember from './InsertMember.vue'
 Vue.component('InsertMember', InsertMember);
 
+// css files
+import 'vue2-admin-lte/src/lib/css'
 
+// js files
+import 'vue2-admin-lte/src/lib/script'
 
 // 注册到全局
 Vue.component(VTable.name, VTable);
@@ -45,6 +58,9 @@ export default {
   name: "HelloWorld",
   props: {
     msg: String
+  },
+  components: {
+    'va-carousel': VACarousel
   },
   computed: {
     users: function() {
@@ -71,7 +87,24 @@ export default {
         { field: "name", title: "姓名", width: 80, isResize: true, titleAlign: "center", columnAlign: "center", isEdit: true },
         { field: "age", title: "年齡", width: 80, isResize: true, titleAlign: "center", columnAlign: "center", isEdit: true },
         { field: "custome-adv", title: "操作", width: 200, titleAlign: "center", columnAlign: "center", componentName: "table-operation", isResize: true }
-      ]
+      ],
+      carousel: {
+        name: 'carousel-example',
+        list: [
+          {
+            image: 'http://placehold.it/900x500/39CCCC/ffffff&text=I+Love+Bootstrap',
+            text: 'First Slide'
+          },
+          {
+            image: 'http://placehold.it/900x500/3c8dbc/ffffff&text=I+Love+Bootstrap',
+            text: 'Second Slide'
+          },
+          {
+            image: 'http://placehold.it/900x500/f39c12/ffffff&text=I+Love+Bootstrap',
+            text: 'Third Slide'
+          }
+        ]
+      }
     };
   },
   firestore() {
